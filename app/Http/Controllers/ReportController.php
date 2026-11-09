@@ -20,8 +20,9 @@ class ReportController extends Controller
 
         return redirect('/')->with('success', 'تم استلام البلاغ بنجاح');
     }
-    public function index()
+   public function index()
 {
-    return view('reports');
+    $reports = \App\Models\Report::latest()->get();
+    return view('reports', compact('reports'));
 }
 }
