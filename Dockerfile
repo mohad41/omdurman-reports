@@ -10,7 +10,7 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer update --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN composer update  --optimize-autoloader --no-interaction --no-scripts
 RUN php artisan config:clear || true
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
