@@ -20,9 +20,17 @@ class ReportController extends Controller
 
         return redirect('/')->with('success', 'تم استلام البلاغ بنجاح');
     }
-   public function index()
+  public function index(Request $request)
 {
-    $reports = \App\Models\Report::latest()->get();
+    $query = \App\Models\Report::query();
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where('title', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%");
+    }
+
+    $reports = $query->latest()->get();
     return view('reports', compact('reports'));
 }
     public function destroy($id)
