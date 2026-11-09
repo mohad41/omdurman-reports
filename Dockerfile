@@ -10,11 +10,8 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer updata --no-dev --optimize-autoloader \
-    && php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
-
+RUN composer update --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN php artisan config:clear || true
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 CMD php artisan serve --host=0.0.0.0 --port=$PORT
