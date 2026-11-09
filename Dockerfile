@@ -10,7 +10,7 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader \
+RUN composer updata --no-dev --optimize-autoloader \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear
