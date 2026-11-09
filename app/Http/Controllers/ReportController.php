@@ -32,4 +32,12 @@ class ReportController extends Controller
 
     return redirect('/reports')->with('success', 'تم حذف البلاغ بنجاح');
 }
+    public function toggleStatus($id)
+{
+    $report = \App\Models\Report::findOrFail($id);
+    $report->status = $report->status == 'تم الحل' ? 'قيد المعالجة' : 'تم الحل';
+    $report->save();
+
+    return redirect('/reports')->with('success', 'تم تحديث حالة البلاغ');
+}
 }
