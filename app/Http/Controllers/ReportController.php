@@ -25,4 +25,11 @@ class ReportController extends Controller
     $reports = \App\Models\Report::latest()->get();
     return view('reports', compact('reports'));
 }
+    public function destroy($id)
+{
+    $report = \App\Models\Report::findOrFail($id);
+    $report->delete();
+
+    return redirect('/reports')->with('success', 'تم حذف البلاغ بنجاح');
+}
 }
