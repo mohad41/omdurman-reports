@@ -1,11 +1,20 @@
-FROM richarvey/nginx-php-fpm:3.1.6
+FROM php:8.2-cli
+
+RUN apt-get update && apt-get install -y \
+    git unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www
+
 COPY . .
-ENV SKIP_COMPOSER 1
-ENV WEBROOT /var/www/html/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
-ENV APP_ENV production
-ENV APP_DEBUG false
-ENV COMPOSER_ALLOW_SUPERUSER 1
-CMD ["/start.sh"]
+
+RUN composer install --no-dev --optimize-autoloader \
+    && php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
+
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+CMD php artisan serve --host=0.0.0.0 --port=$PORT
